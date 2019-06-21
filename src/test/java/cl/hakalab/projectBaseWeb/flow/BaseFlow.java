@@ -1,6 +1,7 @@
 package cl.hakalab.projectBaseWeb.flow;
 
 import java.util.concurrent.TimeUnit;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.junit.AfterClass;
@@ -16,7 +17,7 @@ import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.PageFactory;
-import cl.hakalab.projectBaseWeb.model.Prueba;
+import cl.hakalab.projectBaseWeb.model.EjemploModel;
 
 @RunWith(Suite.class)
 @SuiteClasses({})
@@ -24,23 +25,23 @@ public class BaseFlow {
 	private static final Log log = LogFactory.getLog(BaseFlow.class);
 	public static WebDriver driver;
 	public static SessionId session;
-	public static Prueba pageModel;
+	public static EjemploModel pageModel;
 	static DesiredCapabilities caps = null;
 	public static final String USERNAME = "hugoHaka";
 	public static final String ACCESS_KEY = "cf258cd2-347e-4954-afea-0f3864b4ec4b";
 	public static final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
 	
-	private static Boolean isSauceLab= false;
+	public static Boolean saucelab = false;
 	public static String navegador = "chrome";
 	
 	@BeforeClass
 	public static void InitializeWebDriver() throws Exception {
-		if (isSauceLab) {
-		capabilityBrowser(navegador);
+		if (saucelab) {
+			capabilityBrowser(navegador);
 		}else {
-			setDriverDesa();
+			setDriverDesa(navegador);
 		}
-	    pageModel = PageFactory.initElements(driver, Prueba.class);
+	    pageModel = PageFactory.initElements(driver, EjemploModel.class);
 	}
 	    
 	@AfterClass
@@ -48,9 +49,8 @@ public class BaseFlow {
 		driver.quit();
 	}
 
-	public static void setDriverDesa() throws Exception {
+	public static void setDriverDesa(String navegador) throws Exception {
 		switch (navegador) {
-		
 		case "chrome":
 			System.setProperty("webdriver.chrome.driver",System.getProperty("user.dir")+"/WebDriver/Chrome/Windows/chromedriver.exe" );
 			driver = new ChromeDriver();
