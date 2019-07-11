@@ -13,10 +13,12 @@ import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.openqa.selenium.support.PageFactory;
+
 import cl.hakalab.projectBaseWeb.model.EjemploModel;
 
 @RunWith(Suite.class)
@@ -32,7 +34,7 @@ public class BaseFlow {
 	public static final String URL = "https://" + USERNAME + ":" + ACCESS_KEY + "@ondemand.saucelabs.com:443/wd/hub";
 	
 	public static Boolean saucelab = false;
-	public static String navegador = "chrome";
+	public static String navegador = "iExplorer";
 	
 	@BeforeClass
 	public static void InitializeWebDriver() throws Exception {
@@ -60,17 +62,18 @@ public class BaseFlow {
 			break;
 		
 		case "iExplorer":
-//			System.setProperty("webdriver.ie.driver", Constants.iExplorerDriver);
-			DesiredCapabilities caps = DesiredCapabilities.internetExplorer();    
-			caps.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);    
-			caps.setCapability("requireWindowFocus", true);
-			driver = new InternetExplorerDriver(caps);
-			driver.manage().timeouts().implicitlyWait(7, TimeUnit.SECONDS);
-			driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
+			DesiredCapabilities capabilities = DesiredCapabilities.internetExplorer(); 
+			capabilities.setCapability(CapabilityType.BROWSER_NAME, "IE"); 
+			capabilities.setCapability(InternetExplorerDriver.INTRODUCE_FLAKINESS_BY_IGNORING_SECURITY_DOMAINS,true);
+			capabilities.setCapability(InternetExplorerDriver.IGNORE_ZOOM_SETTING, true);
+			capabilities.setCapability("ignoreProtectedModeSettings",true);
+			capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+			System.setProperty("webdriver.ie.driver", System.getProperty("user.dir")+"/WebDriver/IExplorer/Windows/IEDriverServer.exe");
+			driver = new InternetExplorerDriver(capabilities);
 			driver.manage().window().maximize();
-			Runtime.getRuntime().exec("C:/Users/HugoyNathalie/Desktop/will/cencosud_test/WebDriver/IExplorer/Windows/aut.exe");
+			driver.manage().timeouts().implicitlyWait(10, TimeUnit.SECONDS);
+			driver.manage().timeouts().pageLoadTimeout(120, TimeUnit.SECONDS);
 			break;
-		
 		}
 		
 	}
